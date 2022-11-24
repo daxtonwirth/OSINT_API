@@ -11,6 +11,7 @@ Scamalytics_API_KEY = API_Keys.Scamalytics_API_KEY
 
 
 def IP_Address(ipaddress):
+    # VirusTotal Request
     VirusTotal_Request = requests.get("https://www.virustotal.com/api/v3/ip_addresses/" + ipaddress, headers={'x-apikey': VirusTotal_API_Key}).json()
     #print(VirusTotal_Request)
 
@@ -55,13 +56,15 @@ def IP_Address(ipaddress):
 
     print(f">> AbuseIPDB: Abuse score: {abuseConfidenceScore}/100 ({isWhitelisted}) | Reported {totalReports} times by {numDistinctUsers} users | ISP: {isp} | Country: {countryCode} | Domain: {domain}")
 
-
+    # IBM X-Force Exchange Request
     XFE_Request = requests.get("https://exchange.xforce.ibmcloud.com/api/ipr/" + ipaddress, auth=HTTPBasicAuth(XFE_API_KEY, XFE_API_PASS))
     #print(XFE_Request.text)
+    
     decodedResponse = json.loads(XFE_Request.text)
     score = decodedResponse["score"]
     print(f">> XFE: {score}/10")
 
+    # Scamalytics API request
     Scamalytics_Request = requests.get("https://api11.scamalytics.com/daxtonwirth/?key=" + Scamalytics_API_KEY + "&ip=" + ipaddress)
     decodedResponse = json.loads(Scamalytics_Request.text)
     risk = decodedResponse["risk"]
